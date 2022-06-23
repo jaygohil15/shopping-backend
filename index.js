@@ -23,6 +23,9 @@ app.use(express.json())
 
 app.use('/api/product', productRoute)
 app.use('/api/cart', cartRoute)
+app.get('/', (req, res) => {
+   res.send('Success')
+})
 
 app.listen(process.env.PORT, () => {
    console.log(`Server started on ${process.env.PORT}...`)
