@@ -71,44 +71,55 @@ router.get('/', async (req, res) => {
 router.put('/', async (req, res) => {
    try {
 
-      if (!mongoose.Types.ObjectId.isValid(req.body._id)) {
+      // console.log(req.body)
+
+      // if (!mongoose.Types.ObjectId.isValid(req.body._id)) {
+      //    res.status(400).json({
+      //       success: false,
+      //       message: 'Invalid doc id'
+      //    })
+      // } else {
+      const foundProduct = await Product.findById(req.body._id)
+      if (foundProduct === null) {
+         res.status(400).end('Invalid Request.Product not found in Product Collection')
+         return
+      }
+
+      const foundProductCart = await Cart.findById(req.body._id)
+      if (foundProductCart === null) {
          res.status(400).json({
             success: false,
-            message: 'Invalid doc id'
+            message: 'Invalid Request.Product not found in Cart Collection'
          })
+         return
       } else {
-         const foundProduct = await Product.findById(req.body._id)
-         if (foundProduct === null) {
-            res.status(400).end('Invalid Request.Product not found in Product Collection')
-         }
-
-         const foundProductCart = await Cart.findById(req.body._id)
-         if (foundProductCart === null) {
-            res.status(400).send('Invalid Request.Product not found  in Cart Collection')
-         } else {
-            if (req.body.type == 'increment') {
-               if (foundProduct.quantity <= 0) {
-                  res.status(400).end('Product is not available')
-               } else {
-                  foundProduct.quantity -= 1
-                  foundProductCart.quantity += 1
-                  foundProduct.save()
-                  foundProductCart.save()
-                  res.send('Product of quantity 1 Successfully added to cart.')
-               }
+         if (req.body.type == 'increment') {
+            if (foundProduct.quantity <= 0) {
+               res.status(400).end('Product is not available')
             } else {
-               foundProduct.quantity += 1
-               foundProductCart.quantity -= 1
+               foundProduct.quantity -= 1
+               foundProductCart.quantity += 1
                foundProduct.save()
-               if (foundProductCart < 1) {
-                  foundProductCart.remove()
-               } else {
-                  foundProductCart.save()
-               }
-               res.send('Product of quantity 1 Successfully removed from cart.')
+               foundProductCart.save()
+               res.send('Product of quantity 1 Successfully added to cart.')
             }
+         } else {
+            foundProduct.quantity += 1
+            foundProductCart.quantity -= 1
+            foundProduct.save()
+            console.log(foundProduct, foundProductCart)
+            if (foundProductCart.quantity < 1) {
+               foundProductCart.remove()
+            } else {
+               foundProductCart.save()
+            }
+            res.json({
+               success: true,
+               message: 'Product of quantity 1 Successfully removed from cart.'
+            })
          }
       }
+      // }
 
    } catch (error) {
       console.log(error)
