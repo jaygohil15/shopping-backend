@@ -11,9 +11,15 @@ router.post('/', async (req, res) => {
    })
    try {
       const some1 = await product.save()
-      res.send(some1)
+      res.json({
+         success: true,
+         data: some1
+      })
    } catch (err) {
-      res.status(400).send(err)
+      res.status(400).json({
+         success: false,
+         message: err
+      })
    }
 })
 
@@ -22,7 +28,10 @@ router.get('/', async (req, res) => {
       const allProduct = await Product.find()
       res.send(allProduct)
    } catch (err) {
-      res.status(400).send(err)
+      res.status(400).json({
+         success: false,
+         message: err
+      })
    }
 })
 

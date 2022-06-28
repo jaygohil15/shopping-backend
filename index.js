@@ -3,13 +3,15 @@ const dotenv = require('dotenv')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const morgan = require('morgan')
+const helmet = require('helmet')
 
 const productRoute = require('./routes/product')
 const cartRoute = require('./routes/cart')
 
 const app = express()
-dotenv.config()
 app.use(cors())
+app.use(helmet())
+dotenv.config()
 
 mongoose.connect(process.env.DB_CONNECT, () => {
    console.log('Connected to DB...')

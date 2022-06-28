@@ -30,7 +30,7 @@ router.post('/', async (req, res) => {
          })
          const prodCount = foundProduct.quantity - req.body.quantity
          if (prodCount < 0) {
-            res.status(400).end('Product is not available')
+            res.status(400).send('Product is not available')
          } else {
             foundProduct.quantity = prodCount
             foundProduct.save()
@@ -42,7 +42,7 @@ router.post('/', async (req, res) => {
 
          const prodCount = foundProduct.quantity - req.body.quantity
          if (prodCount < 1 || req.body.quantity < 1) {
-            res.status(400).end('Product is not available')
+            res.status(400).send('Product is not available')
          } else {
             foundProduct.quantity = prodCount
             foundProductCart.quantity = foundProductCart.quantity + req.body.quantity
@@ -54,7 +54,7 @@ router.post('/', async (req, res) => {
 
    } catch (err) {
       console.log(err)
-      res.status(400).end(err.message)
+      res.status(400).send(err.message)
    }
 })
 
