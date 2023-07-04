@@ -29,6 +29,8 @@ app.use('/api/cart', cartRoute)
 //    res.send('Success')
 // })
 
-app.listen(process.env.PORT, () => {
-   console.log(`Server started on ${process.env.PORT}...`)
+const port = process.env.PORT ? process.env.PORT : 9000;
+
+app.listen(port, () => {
+   console.log(`Server started on ${port}...`)
 })
